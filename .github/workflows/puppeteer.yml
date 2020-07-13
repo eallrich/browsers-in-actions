@@ -10,14 +10,16 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }} + node ${{ matrix.node-version}}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         node-version: [12.x, 14.x]
+        os: [ubuntu-18.04, ubuntu-20.04]
 
     steps:
     - uses: actions/checkout@v2
-    - name: Node.js ${{ matrix.node-version }}
+    - name: Install Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
