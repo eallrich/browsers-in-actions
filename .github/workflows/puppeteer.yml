@@ -25,3 +25,10 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Install Puppeteer (and Chromium)
       run: yarn add puppeteer
+    - name: Take a screenshot of a webpage
+      run: node screenshot.js
+    - name: Save the screenshot
+      uses: actions/upload-artifact@v1
+      with:
+        name: screenshot
+        path: screenshot.png
