@@ -1,0 +1,46 @@
+# Docs: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Selenium + Chromium
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: ${{ matrix.os }} + node ${{ matrix.node-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x]
+        os: [ubuntu-18.04, ubuntu-20.04]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install Chromium
+      run: |
+        apt update
+        apt install -y chromium-browser
+    - name: Clone SingleFile
+      run: git clone https://github.com/gildas-lormeau/SingleFile.git
+    - name: Install dependencies & chromedriver
+      run: |
+        cd SingleFile/cli
+        npm install
+        npm install chromedriver
+        export PATH="$PATH:$(pwd)/node_modules/chromedriver/bin"
+        chmod u+x single-file
+    - name: Make an archive of a webpage
+      run: |
+        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://www.reddit.com/' archive_${{ matrix.os }}_node${{ matrix.node-version }}.html --back-end=webdriver-chromium
+    - name: Save the archive
+      uses: actions/upload-artifact@v2
+      with:
+        name: archives
+        path: archive_${{ matrix.os }}_node${{ matrix.node-version }}.html
