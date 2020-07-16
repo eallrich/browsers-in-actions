@@ -1,0 +1,51 @@
+# Docs: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Selenium + Firefox
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: ${{ matrix.os }} + node ${{ matrix.node-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x]
+        os: [ubuntu-18.04, ubuntu-20.04]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install Firefox
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y firefox
+    - name: Clone SingleFile
+      run: git clone https://github.com/gildas-lormeau/SingleFile.git
+    - name: Install SingleFile dependencies & geckodriver
+      run: |
+        cd SingleFile/cli
+        npm install
+        npm install geckodriver
+        chmod u+x single-file
+    - name: Download ublock origin for firefox
+      run: |
+        cd SingleFile/cli
+        curl -L 'https://addons.mozilla.org/firefox/downloads/file/3606998/ublock_origin-1.28.2-an+fx.xpi?src=dp-btn-primary' > ublock_origin.xpi
+    - name: Make an archive of a webpage
+      run: |
+        cd SingleFile/cli
+        export PATH="$PATH:$(pwd)/node_modules/geckodriver/bin"
+        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://www.reddit.com/' archive_${{ matrix.os }}_node${{ matrix.node-version }}.html --back-end=webdriver-gecko --browser-width=1920 --browser-height=1080 --browser-extensions="ublock_origin.xpi"
+    - name: Save the archive
+      uses: actions/upload-artifact@v2
+      with:
+        name: archives
+        path: SingleFile/cli/archive_${{ matrix.os }}_node${{ matrix.node-version }}.html
