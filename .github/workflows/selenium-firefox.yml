@@ -49,5 +49,3 @@ jobs:
       with:
         name: archives_firefox
         path: SingleFile/cli/archive_${{ matrix.os }}_node${{ matrix.node-version }}.html
-    - name: Check for existence of places.sqlite
-      run: find ~/.mozilla/ -type f -name '*places.sqlite*'
