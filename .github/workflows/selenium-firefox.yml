@@ -47,5 +47,5 @@ jobs:
     - name: Save the archive
       uses: actions/upload-artifact@v2
       with:
-        name: archives
+        name: archives_firefox
         path: SingleFile/cli/archive_${{ matrix.os }}_node${{ matrix.node-version }}.html
