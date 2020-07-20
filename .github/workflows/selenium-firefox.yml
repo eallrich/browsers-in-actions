@@ -1,5 +1,3 @@
-# Docs: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
 name: Selenium + Firefox
 
 on:
