@@ -26,9 +26,10 @@ jobs:
     - name: Take a screenshot of a webpage
       run: node screenshot.js
     - name: Rename the screenshot
-      run: mv screenshot.png screenshot_${{ matrix.os }}_node${{ matrix.node-version }}.png
+      run: mv screenshot_top.png screenshot_${{ matrix.os }}_node${{ matrix.node-version }}_top.png
+      run: mv screenshot_all.png screenshot_${{ matrix.os }}_node${{ matrix.node-version }}_all.png
     - name: Save the screenshot
       uses: actions/upload-artifact@v2
       with:
         name: screenshots
-        path: screenshot_${{ matrix.os }}_node${{ matrix.node-version }}.png
+        path: screenshot_${{ matrix.os }}_node${{ matrix.node-version }}*

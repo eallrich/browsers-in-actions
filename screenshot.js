@@ -6,7 +6,8 @@ const puppeteer = require('puppeteer');
   await page.setViewport({width: 1920, height: 1080});
 
   await page.goto('https://www.reddit.com/');
-  await page.screenshot({path: 'screenshot.png'});
+  await page.screenshot({path: 'screenshot_top.png'})
+  await page.screenshot({path: 'screenshot_all.png', fullPage: true});
 
   await browser.close();
 })();
