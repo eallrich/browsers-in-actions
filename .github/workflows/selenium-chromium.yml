@@ -42,7 +42,7 @@ jobs:
         cd SingleFile/cli
         export PATH="$PATH:$(pwd)/node_modules/chromedriver/bin"
         xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://www.reddit.com/' archive_${{ matrix.os }}_node${{ matrix.node-version }}_noads.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080 --browser-extensions="ublock_origin.crx"
-        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://www.reddit.com/' archive_${{ matrix.os }}_node${{ matrix.node-version }}_ads.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080
+        xvfb-run -s "-screen 1 1920x1080x16" ./single-file 'https://www.reddit.com/' archive_${{ matrix.os }}_node${{ matrix.node-version }}_ads.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080
     - name: Save the archive
       uses: actions/upload-artifact@v2
       with:
