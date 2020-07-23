@@ -37,19 +37,32 @@ jobs:
       run: |
         cd SingleFile/cli
         curl -L 'https://clients2.google.com/service/update2/crx?response=redirect&prodversion=49.0&acceptformat=crx3&x=id%3Dcgbcahbpdhpcegmbfconppldiemgcoii%26installsource%3Dondemand%26uc' > ublock_origin.crx
-    - name: Make an archive of a webpage
+    - name: Make an archive of a webpage with headless=true
       run: |
         cd SingleFile/cli
         export PATH="$PATH:$(pwd)/node_modules/chromedriver/bin"
-        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://www.reddit.com/' archive_${{ matrix.os }}_node${{ matrix.node-version }}_reddit_noads.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080 --browser-extensions="ublock_origin.crx"
+        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://www.reddit.com/' archive_${{ matrix.os }}_node${{ matrix.node-version }}_reddit_noads_headless.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080 --browser-extensions="ublock_origin.crx"
         sleep 2
-        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://www.reddit.com/' archive_${{ matrix.os }}_node${{ matrix.node-version }}_reddit_ads.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080
+        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://www.reddit.com/' archive_${{ matrix.os }}_node${{ matrix.node-version }}_reddit_ads_headless.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080
         sleep 2
-        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://www.reddit.com/r/Ubuntu/comments/g6quvr/ubuntu_2004_lts_is_here/' archive_${{ matrix.os }}_node${{ matrix.node-version }}_subreddit_noads.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080 --browser-extensions="ublock_origin.crx"
+        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://www.reddit.com/r/Ubuntu/comments/g6quvr/ubuntu_2004_lts_is_here/' archive_${{ matrix.os }}_node${{ matrix.node-version }}_subreddit_noads_headless.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080 --browser-extensions="ublock_origin.crx"
         sleep 2
-        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://www.reddit.com/r/Ubuntu/comments/g6quvr/ubuntu_2004_lts_is_here/' archive_${{ matrix.os }}_node${{ matrix.node-version }}_subreddit_ads.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080
+        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://www.reddit.com/r/Ubuntu/comments/g6quvr/ubuntu_2004_lts_is_here/' archive_${{ matrix.os }}_node${{ matrix.node-version }}_subreddit_ads_headless.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080
         sleep 2
-        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://github.com/eallrich/browsers-in-actions' archive_${{ matrix.os }}_node${{ matrix.node-version }}_github.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080 --browser-extensions="ublock_origin.crx"
+        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://github.com/eallrich/browsers-in-actions' archive_${{ matrix.os }}_node${{ matrix.node-version }}_github_headless.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080 --browser-extensions="ublock_origin.crx"
+    - name: Make an archive of a webpage with headless=false
+      run: |
+        cd SingleFile/cli
+        export PATH="$PATH:$(pwd)/node_modules/chromedriver/bin"
+        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://www.reddit.com/' archive_${{ matrix.os }}_node${{ matrix.node-version }}_reddit_noads_headed.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080 --browser-headless=false --browser-extensions="ublock_origin.crx"
+        sleep 2
+        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://www.reddit.com/' archive_${{ matrix.os }}_node${{ matrix.node-version }}_reddit_ads_headed.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080 --browser-headless=false
+        sleep 2
+        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://www.reddit.com/r/Ubuntu/comments/g6quvr/ubuntu_2004_lts_is_here/' archive_${{ matrix.os }}_node${{ matrix.node-version }}_subreddit_noads_headed.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080 --browser-headless=false --browser-extensions="ublock_origin.crx"
+        sleep 2
+        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://www.reddit.com/r/Ubuntu/comments/g6quvr/ubuntu_2004_lts_is_here/' archive_${{ matrix.os }}_node${{ matrix.node-version }}_subreddit_ads_headed.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080 --browser-headless=false
+        sleep 2
+        xvfb-run -s "-screen 0 1920x1080x16" ./single-file 'https://github.com/eallrich/browsers-in-actions' archive_${{ matrix.os }}_node${{ matrix.node-version }}_github_headed.html --back-end=webdriver-chromium --browser-width=1920 --browser-height=1080 --browser-headless=false --browser-extensions="ublock_origin.crx"
     - name: Save the archive
       uses: actions/upload-artifact@v2
       with:
